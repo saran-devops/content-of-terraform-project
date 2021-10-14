@@ -7,6 +7,17 @@ provider "aws" {
   secret_key = var.secret_key
 }
 
+resource "aws_s3_bucket" "my-s3-bucket" {
+  bucket_prefix = var.bucket_prefix
+  acl = var.acl
+
+   versioning {
+    enabled = var.versioning
+  }
+
+  tags = var.tags
+}
+
 data "aws_ami" "ubuntu" {
   most_recent = true
 
@@ -30,25 +41,25 @@ resource "aws_security_group" "Jenkins_port_config" {
   description = "Security group for jenkins"
   vpc_id      = aws_default_vpc.main.id
 
-  #Create SG for allowing TCP/8080 from * and TCP/22
+  #Create SG for allowing TCP/80 from * and TCP/22
   ingress {
-    from_port   = 8080
-    to_port     = 8080
+    from_port   = 80
+    to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [aws_default_vpc.main.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [aws_default_vpc.main.cidr_block]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   egress {
     from_port   = 0
-    to_port     = 65535
-    protocol    = "tcp"
+    to_port     = 0
+    protocol    = -1
     cidr_blocks = ["0.0.0.0/0"]
   }
 
