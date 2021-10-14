@@ -3,8 +3,8 @@
 provider "aws" {
   region     = var.aws_region
   alias      = "Jenkins-instance"
-  access_key = "AKIASAA4UFYR7MTQCCNP"
-  secret_key = "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"
+  access_key = var.access_key
+  secret_key = var.secret_key
 }
 
 data "aws_ami" "ubuntu" {
